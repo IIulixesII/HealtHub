@@ -1,4 +1,4 @@
-package main;
+package Modelos;
 
 public class doctor {
 
