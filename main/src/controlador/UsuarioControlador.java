@@ -9,24 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Interfaces.UserRepository;
-import Modelos.Paciente;
+import Modelos.pacientes;
 
-public class PacienteControlador implements UserRepository {
-    private final Connection connection;
+public class UsuarioControlador implements UserRepository {
+    Connection connection;
 
-    public PacienteControlador() {
+    public void PacienteControlador() {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
     @Override
-    public List<Paciente> getAllUsers() {
-        List<Paciente> users = new ArrayList<>();
+    public List<pacientes> getAllUsers() {
+        List<pacientes> users = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users ");
             ResultSet resultSet = statement.executeQuery();
        
             while (resultSet.next()) {
-            	Paciente user = new Paciente(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("email"));
+            	pacientes user = new pacientes(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("email"));
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -36,8 +36,8 @@ public class PacienteControlador implements UserRepository {
     }
 
     @Override
-    public Paciente getUserById(int id) {
-        Paciente user = null;
+    public pacientes getUserById(int id) {
+    	pacientes user = null;
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             statement.setInt(1, id);
@@ -54,7 +54,7 @@ public class PacienteControlador implements UserRepository {
     }
 
 	@Override
-    public void addUser(Paciente usuario) {
+    public void addUser(pacientes usuario) {
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO users (name, email) VALUES (?, ?)");
             statement.setString(1, usuario.getNombre());
@@ -70,7 +70,7 @@ public class PacienteControlador implements UserRepository {
     }
 
 	@Override
-    public void updateUser(Paciente usuario) {
+    public void updateUser(pacientes usuario) {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE users SET name = ?, email = ? WHERE id = ?");
             statement.setString(1, usuario.getNombre());
