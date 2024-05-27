@@ -1,24 +1,23 @@
-package Modelos;
+	
+     import java.util.List;
 
-
-import javax.swing.JOptionPane;
-
-import com.mysql.jdbc.Connection;
-
-
-
-public class main {
-
-    
-    public static void main(String[] args) {
-    	
-    	Conexion con= new Conexion();
-    	
-    	Connection Conexion = con.conectar();
-    	
- 
-    	
-    	
+    import javax.swing.JOptionPane;
+	
+	import com.mysql.jdbc.Connection;
+	
+	import Interfaces.PacienteControlador;
+    import Modelo.Paciente;
+	
+	
+	public class Main {
+	    public static void main(String[] args) {
+	    	PacienteControlador pacienteControlador = new pacienteControlador();
+	    	
+	        pacienteControlador.addUser(new Paciente("ulises", 1));
+	        List<Paciente>users=pacienteControlador.getAllUsers();
+	        
+	        JOptionPane.showMessageDialog(null, pacienteControlador.getUserById(1));
+	    
     	
     	
 		String [] Opciones= {"entrar como admin","entrar como doctor","Salir"};
@@ -67,6 +66,7 @@ public class main {
 
 				switch (Opcionn) {
 				case "Cirujias":
+
 					break;
 	            case "Guardia":
 					
@@ -92,4 +92,9 @@ public class main {
 		} while (!Opcion.equalsIgnoreCase("Salir"));
 		
 	
-}}
+}
+
+		private static PacienteControlador PacienteControlador() {
+			// TODO Auto-generated method stub
+			return null;
+		}}

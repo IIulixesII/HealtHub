@@ -1,5 +1,5 @@
 
-package controlador;
+package Interfaces;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,25 +8,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Interfaces.UserRepository;
-import Modelos.pacientes;
+import Modelo.Paciente;
+import controlador.DatabaseConnection;
 
-public class UsuarioControlador implements UserRepository {
-    Connection connection;
+public abstract class PacienteControlador implements UserRepository {
+   private final Connection connection;
 
-    public void PacienteControlador() {
+    public PacienteControlador() {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
     @Override
-    public List<pacientes> getAllUsers() {
-        List<pacientes> users = new ArrayList<>();
+    public List<Paciente> getAllUsers() {
+        List<Paciente> users = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users ");
             ResultSet resultSet = statement.executeQuery();
        
             while (resultSet.next()) {
-            	pacientes user = new pacientes(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("email"));
+            	Paciente user = new Paciente(resultSet.getInt("id"), resultSet.getString("nombre"), resultSet.getInt("dni"));
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -36,8 +36,8 @@ public class UsuarioControlador implements UserRepository {
     }
 
     @Override
-    public pacientes getUserById(int id) {
-    	pacientes user = null;
+    public Paciente getUserById(int id) {
+    	Paciente user = null;
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             statement.setInt(1, id);
@@ -45,7 +45,7 @@ public class UsuarioControlador implements UserRepository {
             ResultSet resultSet = statement.executeQuery();
             
             if (resultSet.next()) {
-                user = new Usuario(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("email"));
+                user = new Paciente(resultSet.getInt("id"), resultSet.getString("nombre"), resultSet.getInt("dni"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,15 +54,15 @@ public class UsuarioControlador implements UserRepository {
     }
 
 	@Override
-    public void addUser(pacientes usuario) {
+    public void addUser(Paciente paciente) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO users (name, email) VALUES (?, ?)");
-            statement.setString(1, usuario.getNombre());
-            statement.setString(2, usuario.getEmail());
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO users (nombre, dni) VALUES (?, ?)");
+            statement.setString(1, paciente.getNombre());
+            statement.setInt(2, paciente.getDni());
             
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("Usuario insertado exitosamente");
+                System.out.println("paciente insertado exitosamente");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,12 +70,12 @@ public class UsuarioControlador implements UserRepository {
     }
 
 	@Override
-    public void updateUser(pacientes usuario) {
+    public void updateUser(Paciente paciente) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE users SET name = ?, email = ? WHERE id = ?");
-            statement.setString(1, usuario.getNombre());
-            statement.setString(2, usuario.getEmail());
-            statement.setInt(3, usuario.getId());
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET nombre = ?, dni = ? WHERE id = ?");
+            statement.setString(1, paciente.getNombre());
+            statement.setInt(2, paciente.getDni());
+            statement.setInt(3, paciente.getId());
             
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
